@@ -1,0 +1,73 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Dev Environment ACCESS - Read only access to S3 bucket.
+Parameters:
+  User:
+    Type: String
+    Description: Username
+  Password:
+    Type: String
+    Description: Password
+    NoEcho: true
+Resources:
+  OurUser:
+    Properties:
+      UserName:
+        Ref: User
+      LoginProfile:
+        Password:
+          Ref: Password
+    Type: AWS::IAM::User
+  S3ReadPolicy:
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - s3:ListBucketByTags
+          - s3:GetLifecycleConfiguration
+          - s3:GetBucketTagging
+          - s3:GetInventoryConfiguration
+          - s3:GetObjectVersionTagging
+          - s3:ListBucketVersions
+          - s3:GetBucketLogging
+          - s3:ListBucket
+          - s3:GetAccelerateConfiguration
+          - s3:GetBucketPolicy
+          - s3:GetObjectAcl
+          - s3:GetEncryptionConfiguration
+          - s3:GetBucketRequestPayment
+          - s3:GetObjectVersionAcl
+          - s3:GetObjectTagging
+          - s3:GetMetricsConfiguration
+          - s3:HeadBucket
+          - s3:GetBucketPublicAccessBlock
+          - s3:GetBucketPolicyStatus
+          - s3:ListBucketMultipartUploads
+          - s3:GetBucketWebsite
+          - s3:GetBucketVersioning
+          - s3:GetBucketAcl
+          - s3:GetBucketNotification
+          - s3:GetReplicationConfiguration
+          - s3:ListMultipartUploadParts
+          - s3:GetAccountPublicAccessBlock
+          - s3:ListAllMyBuckets
+          - s3:GetBucketCORS
+          - s3:GetAnalyticsConfiguration
+          - s3:GetBucketLocation
+          Resource: "*"
+      PolicyName: S3ReadPolicy
+      Users:
+      - Ref: OurUser
+    Type: AWS::IAM::Policy
+Outputs:
+  OurUser:
+    Value:
+      Ref: OurUser
+    Export:
+      Name:
+        Fn::Join:
+        - "-"
+        - - Ref: AWS::StackName
+          - OurUser
